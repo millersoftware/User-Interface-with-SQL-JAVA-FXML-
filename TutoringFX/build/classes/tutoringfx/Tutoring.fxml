@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/tutoring-main.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tutoringfx.TutoringController">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="Add">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#addStudent" text="Student" />
+                  <MenuItem mnemonicParsing="false" onAction="#addTutor" text="Tutor" />
+                  <MenuItem mnemonicParsing="false" onAction="#addSubject" text="Subject" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Edit">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#modifyReport" text="Report" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Order">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Order by Name" />
+                  <MenuItem mnemonicParsing="false" text="Order by Enroll Date" />
+               </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <right>
+      <VBox alignment="TOP_CENTER" prefHeight="200.0" spacing="5.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button mnemonicParsing="false" onAction="#interactionReport" prefHeight="25.0" prefWidth="61.0" text="Report" />
+            <Button mnemonicParsing="false" onAction="#clear" prefHeight="25.0" prefWidth="57.0" text="Clear" />
+            <Button mnemonicParsing="false" onAction="#link" prefHeight="25.0" prefWidth="57.0" text="Link" />
+            <Button mnemonicParsing="false" onAction="#removeLink" text="Remove&#10;Link" textAlignment="CENTER" />
+            <Button mnemonicParsing="false" onAction="#removeStudent" text="Remove&#10;Student" />
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding></VBox>
+   </right>
+   <center>
+      <SplitPane dividerPositions="0.75" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
+         <items>
+            <GridPane>
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <ListView fx:id="studentList" onMouseClicked="#studentSelect" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                  <ListView fx:id="tutorList" onMouseClicked="#tutorSelect" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label text="Students">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Tutors" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+               </children>
+            </GridPane>
+            <TextArea fx:id="display" editable="false" onMouseClicked="#refocus" prefHeight="200.0" prefWidth="200.0" />
+         </items>
+      </SplitPane>
+   </center>
+</BorderPane>
