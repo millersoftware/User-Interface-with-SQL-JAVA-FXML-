@@ -2,16 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/Carl%20Miller/Documents/NetBeansProjects/TutoringFX/src/models/Tutor.java</file>
-            <file>file:/C:/Users/Carl%20Miller/Documents/NetBeansProjects/TutoringFX/src/tutoringfx/StudentCellCallBack.java</file>
-            <file>file:/C:/Users/Carl%20Miller/Documents/NetBeansProjects/TutoringFX/src/models/Student.java</file>
-            <file>file:/C:/Users/Carl%20Miller/Documents/NetBeansProjects/TutoringFX/src/tutoringfx/TutorCellCallBack.java</file>
-            <file>file:/C:/Users/Carl%20Miller/Documents/NetBeansProjects/TutoringFX/src/tutoringfx/TutoringController.java</file>
-            <file>file:/C:/Users/Carl%20Miller/Documents/NetBeansProjects/TutoringFX/src/models/Interaction.java</file>
-            <file>file:/C:/Users/Carl%20Miller/Documents/NetBeansProjects/TutoringFX/src/tutoringfx/ExpectedException.java</file>
-            <file>file:/C:/Users/Carl%20Miller/Documents/NetBeansProjects/TutoringFX/src/models/Subject.java</file>
-            <file>file:/C:/Users/Carl%20Miller/Documents/NetBeansProjects/TutoringFX/src/tutoringfx/Helper.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

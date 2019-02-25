@@ -1,19 +1,15 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Carl Miller
+ * Provides formatting for information
  */
 package tutoringfx;
 
 import models.Student;
 import models.Tutor;
 
-/**
- *
- * @author Carl Miller
- */
 public class Helper {
 
+    //Provides student info
     public static String info(Student student) {
 
         return String.format(
@@ -28,6 +24,7 @@ public class Helper {
         );
     }
 
+    //Provides tutor info
     public static String info(Tutor tutor) {
         return String.format(
                 "id: %s\n"
@@ -41,6 +38,7 @@ public class Helper {
         );
     }
 
+    //Provides current date
     public static java.sql.Date currentDate() {
         long now = new java.util.Date().getTime();
         java.sql.Date date = new java.sql.Date(now);

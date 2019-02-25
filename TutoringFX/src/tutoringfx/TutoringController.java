@@ -22,6 +22,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -32,13 +33,20 @@ import models.ORM;
 import models.Student;
 import models.Tutor;
 
-/**
- *
- * @author Carl Miller
- */
 public class TutoringController implements Initializable {
 
-    //menu buttons
+    //A variable to keep track of current desired ordering
+    private String order = "name";
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
+
+    //Control for adding a student(Menu Event)
     @FXML
     private void addStudent(Event event) {
         try {
@@ -89,6 +97,7 @@ public class TutoringController implements Initializable {
         }
     }
 
+    //Control for adding a tutor(Menu Item)
     @FXML
     private void addTutor(Event event) {
         try {
@@ -139,6 +148,7 @@ public class TutoringController implements Initializable {
         }
     }
 
+    //Control for adding a subject(Menu Item)
     @FXML
     private void addSubject(Event event) {
         try {
@@ -188,10 +198,94 @@ public class TutoringController implements Initializable {
             System.exit(1);
         }
     }
+    //Menu disabling code for Edit
+    @FXML
+    private MenuItem modifyItem;
 
+    //Activating code for menu item
+    @FXML
+    private void activateModifyItem(Event event) {
+        //Check if student and tutor are selected
+        Student student = studentList.getSelectionModel().getSelectedItem();
+        Tutor tutor = tutorList.getSelectionModel().getSelectedItem();
+        modifyItem.setDisable(tutor == null || student == null);
+
+        //Checks if its a linked pair
+        if (tutor != null && student != null) {
+            Interaction interact = ORM.findOne(Interaction.class,
+                    "where tutor_id=? and student_id=?",
+                    new Object[]{tutor.getId(), student.getId()}
+            );
+            modifyItem.setDisable(interact == null);
+        }
+
+    }
+
+    //Control for updating a report(Menu Item)
     @FXML
     private void modifyReport(Event event) {
-        System.out.println("modifyBook");
+        try {
+            Student student = studentList.getSelectionModel().getSelectedItem();
+            Tutor tutor = tutorList.getSelectionModel().getSelectedItem();
+
+            Interaction interact = ORM.findOne(Interaction.class,
+                    "where tutor_id=? and student_id=?",
+                    new Object[]{tutor.getId(), student.getId()}
+            );
+
+            // get fxmlLoader
+            URL fxml = getClass().getResource("ModifyReport.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader(fxml);
+            fxmlLoader.load();
+
+            // get scene from loader
+            Scene scene = new Scene(fxmlLoader.getRoot());
+
+            // create a stage for the scene
+            Stage dialogStage = new Stage();
+            dialogStage.setScene(scene);
+
+            // specify dialog title
+            dialogStage.setTitle("Modify a Report");
+
+            // make dialog block the application
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+
+            // invoke the dialog
+            dialogStage.show();
+            //====================================================
+
+            // get controller from fxmlLoader (must be defined in FXML file)
+            // you will need this if you want to set fields before invocation
+            ModifyReportController dialogController = fxmlLoader.getController();
+
+            // pass the TutoringController to the dialog controller
+            // so that the dialog can affect changes in the main window 
+            dialogController.setMainController(this);
+
+            //============ additional features
+            // query window closing
+            dialogStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setContentText("Are you sure you want to exit this dialog?");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() != ButtonType.OK) {
+                        event.consume();
+                    }
+                }
+            });
+
+            // set book to be modified in Modify dialog
+            dialogController.setStudentToModify(student);
+            dialogController.setTutorToModify(tutor);
+            dialogController.setInteractionToModify(interact);
+
+        } catch (IOException ex) {
+            ex.printStackTrace(System.err);
+            System.exit(1);
+        }
     }
 
     //Getters
@@ -207,14 +301,16 @@ public class TutoringController implements Initializable {
         return display;
     }
 
-    //Button Code
+    //Control for displaying Report(Button)
     @FXML
     private void interactionReport(Event event) {
         try {
             Tutor tutor = tutorList.getSelectionModel().getSelectedItem();
             Student student = studentList.getSelectionModel().getSelectedItem();
+
+            //Error Checking
             if (tutor == null || student == null) {
-                throw new ExpectedException("must select student and tutor");
+                throw new ExpectedException("Must select student and tutor");
             }
             Interaction interact = ORM.findOne(Interaction.class,
                     "where tutor_id=? and student_id=?",
@@ -222,7 +318,7 @@ public class TutoringController implements Initializable {
             );
 
             if (interact == null) {
-                throw new ExpectedException("this tutor and student are not together");
+                throw new ExpectedException("This tutor and student are not together");
             }
             if (interact.getReport() == "") {
                 display.setText("--- EMPTY ---");
@@ -238,39 +334,50 @@ public class TutoringController implements Initializable {
         }
     }
 
+    //Control for linking a tutor and a student (Button)
     @FXML
     private void link(Event event) {
         try {
             Tutor tutor = tutorList.getSelectionModel().getSelectedItem();
             Student student = studentList.getSelectionModel().getSelectedItem();
+
+            //Error Checking
             if (tutor == null || student == null) {
-                throw new ExpectedException("must select student and tutor");
+                throw new ExpectedException("Must select student and tutor");
             }
             Interaction interact = ORM.findOne(Interaction.class,
                     "where tutor_id=? and student_id=?",
                     new Object[]{tutor.getId(), student.getId()}
             );
-
             if (interact != null) {
-                throw new ExpectedException("link exits already");
+                throw new ExpectedException("Link exits already");
             }
             if (student.getSubjects().contains(tutor.getSubject().getName())) {
                 throw new ExpectedException("Can't have two of the same subject being taught");
             }
+
+            //Store Change
             interact = new Interaction(student, tutor);
             ORM.store(interact);
 
-            //create instances of call back classes
-            StudentCellCallBack studentCellCallBack = new StudentCellCallBack();
-            TutorCellCallBack tutorCellCallBack = new TutorCellCallBack();
+            Collection<Interaction> interactions = ORM.findAll(Interaction.class,
+                    "where student_id=?", new Object[]{student.getId()});
 
-            //Makes things red when linked by interaction
-            studentCellCallBack.setHightlightedIds(studentIds);
-            tutorCellCallBack.setHightlightedIds(tutorIds);
+            // clear tutor and student then re add list based on interaction
+            tutorIds.clear();
+            for (Interaction interaction : interactions) {
+                tutorIds.add(interaction.getTutor_id());
+
+            }
+            studentIds.clear();
+            for (Interaction interaction : interactions) {
+                studentIds.add(interaction.getStudent_id());
+            }
 
             studentList.refresh();
             tutorList.refresh();
 
+            //Resets Focus
             lastFocused.requestFocus();
             if (lastFocused == studentList) {
                 display.setText(Helper.info(student));
@@ -286,13 +393,14 @@ public class TutoringController implements Initializable {
         }
     }
 
+    //Control for removing a tutor and a student link(Button)
     @FXML
     private void removeLink(Event event) {
         try {
             Tutor tutor = tutorList.getSelectionModel().getSelectedItem();
             Student student = studentList.getSelectionModel().getSelectedItem();
             if (tutor == null || student == null) {
-                throw new ExpectedException("must select student and tutor");
+                throw new ExpectedException("Must select student and tutor");
             }
             Interaction interact = ORM.findOne(Interaction.class,
                     "where tutor_id=? and student_id=?",
@@ -300,7 +408,7 @@ public class TutoringController implements Initializable {
             );
 
             if (interact == null) {
-                throw new ExpectedException("link does not exists");
+                throw new ExpectedException("Link does not exists");
             }
             ORM.remove(interact);
             clear();
@@ -313,10 +421,13 @@ public class TutoringController implements Initializable {
         }
     }
 
+    //Control for removing a student(Button)
     @FXML
     private void removeStudent(Event event) {
         try {
             Student student = studentList.getSelectionModel().getSelectedItem();
+
+            //Error Checking
             if (student == null) {
                 throw new ExpectedException("No student selected");
             }
@@ -348,7 +459,58 @@ public class TutoringController implements Initializable {
             refocus(event);
         }
     }
+    //Menu disabling code for Order
+    @FXML
+    private MenuItem nameItem;
+    @FXML
+    private MenuItem enrolledItem;
 
+    //Activate menu item when its one or the other
+    @FXML
+    private void activateOrderItem(Event event) {
+        nameItem.setDisable(this.getOrder().equals("name"));
+        enrolledItem.setDisable(this.getOrder().equals("enrolled"));
+    }
+
+    //Menu Item
+    @FXML
+    private void orderName(Event event) {
+        this.setOrder("name");
+        order();
+
+    }
+
+    //Menu Item
+    @FXML
+    private void orderEnroll(Event event) {
+        this.setOrder("enrolled");
+        order();
+
+    }
+
+    //Function to order lists based on current selection
+    @FXML
+    public void order() {
+
+        //Prepare List
+        studentList.getItems().clear();
+        tutorList.getItems().clear();
+        ORM.init(DBProps.getProps());
+
+        //Order Students based on selection
+        Collection<Student> students = ORM.findAll(Student.class, "order by " + this.getOrder());
+        for (Student student : students) { //Gets info from Student class
+            studentList.getItems().add(student);
+        }
+        //Order Tutors
+        Collection<Tutor> tutors = ORM.findAll(Tutor.class, "order by name");
+        for (Tutor tutor : tutors) { //Gets info from Tutor class
+            tutorList.getItems().add(tutor);
+        }
+
+    }
+
+    //Clear Lists(Button)
     @FXML
     private void clear(Event event) {
         tutorList.getSelectionModel().clearSelection();
@@ -361,7 +523,7 @@ public class TutoringController implements Initializable {
         lastFocused = null;
     }
 
-    //Overloaded
+    //Overloaded (used for non events)
     @FXML
     private void clear() {
         tutorList.getSelectionModel().clearSelection();
@@ -373,8 +535,7 @@ public class TutoringController implements Initializable {
         display.setText("");
         lastFocused = null;
     }
-    ///////////////////////////////////////////////////////////////////////
-
+    //Very important information storage of lists
     private final Collection<Integer> studentIds = new HashSet<>();
     private final Collection<Integer> tutorIds = new HashSet<>();
 
@@ -389,10 +550,12 @@ public class TutoringController implements Initializable {
 
     private Node lastFocused = null;
 
+    //Gets focus
     void setLastFocused(Node lastFocused) {
         this.lastFocused = lastFocused;
     }
 
+    //requests focus
     @FXML
     private void refocus(Event event) {
         if (lastFocused != null) {
@@ -400,7 +563,7 @@ public class TutoringController implements Initializable {
         }
     }
 
-    //mouse click focus code
+    //Student Information(Mouse Click)
     @FXML
     private void studentSelect(Event event) {
         Student student = studentList.getSelectionModel().getSelectedItem();
@@ -429,7 +592,7 @@ public class TutoringController implements Initializable {
 
     }
 
-    //mouse click focus code
+    //Tutor Information(Mouse Click)
     @FXML
     private void tutorSelect(Event event) {
         Tutor tutor = tutorList.getSelectionModel().getSelectedItem();
@@ -454,6 +617,7 @@ public class TutoringController implements Initializable {
         display.setText(Helper.info(tutor));
     }
 
+    //Inital Setup Information
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         ORM.init(DBProps.getProps());

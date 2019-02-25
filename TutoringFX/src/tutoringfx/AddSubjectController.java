@@ -1,7 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/*
+ * Carl Miller
+ * This class provides controll when the add button is hit for subject
+ * It manipulates various elements in the fxml file
  */
 package tutoringfx;
 
@@ -18,11 +19,6 @@ import javafx.scene.control.TextField;
 import models.ORM;
 import models.Subject;
 
-/**
- * FXML Controller class
- *
- * @author Carl Miller
- */
 public class AddSubjectController implements Initializable {
 
     private TutoringController mainController;
@@ -36,6 +32,7 @@ public class AddSubjectController implements Initializable {
     @FXML
     private TextField new_subject;
 
+    //Control for when add button is hit
     @FXML
     private void add(Event event) {
         try {
@@ -65,6 +62,7 @@ public class AddSubjectController implements Initializable {
 
     }
 
+    //Control for when cancel button is hit
     @FXML
     private void cancel(Event event) {
         ((Button) event.getSource()).getScene().getWindow().hide();

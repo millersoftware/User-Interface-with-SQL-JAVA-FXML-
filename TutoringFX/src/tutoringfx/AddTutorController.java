@@ -1,7 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/*
+ * Carl Miller
+ * This class provides controll when the add button is hit for tutor
+ * It manipulates various elements in the fxml file
  */
 package tutoringfx;
 
@@ -22,11 +23,6 @@ import models.Subject;
 import models.Tutor;
 import org.apache.commons.validator.EmailValidator;
 
-/**
- * FXML Controller class
- *
- * @author Carl Miller
- */
 public class AddTutorController implements Initializable {
 
     //===================== add this data member and setter
@@ -47,6 +43,7 @@ public class AddTutorController implements Initializable {
     @FXML
     private ComboBox<String> tutor_subject;
 
+    //Control for when add button is hit
     @FXML
     private void add(Event event) {
         try {
@@ -79,7 +76,7 @@ public class AddTutorController implements Initializable {
             Tutor tutorWithName
                     = ORM.findOne(Tutor.class, "where name=?", new Object[]{name});
             if (tutorWithName != null) {
-                throw new ExpectedException("existing tutor with same name");
+                throw new ExpectedException("Existing tutor with same name");
             }
             // put it into the database
             Tutor newTutor = new Tutor(name, email, subjectWithName.getId());
@@ -105,6 +102,7 @@ public class AddTutorController implements Initializable {
 
             // set text display to added tutor
             display.setText(Helper.info(newTutor));
+            mainController.order();
 
             ((Button) event.getSource()).getScene().getWindow().hide();
 
@@ -116,6 +114,7 @@ public class AddTutorController implements Initializable {
 
     }
 
+    //Control for when cancel button is hit
     @FXML
     private void cancel(Event event) {
         ((Button) event.getSource()).getScene().getWindow().hide();

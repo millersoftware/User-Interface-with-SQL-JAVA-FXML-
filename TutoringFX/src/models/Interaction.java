@@ -1,3 +1,8 @@
+/*
+ * Carl Miller
+ * This class handles data from the interacion table.
+ * It allows for load, insert and update
+ */
 package models;
 
 import java.sql.Connection;

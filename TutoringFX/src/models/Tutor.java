@@ -1,3 +1,8 @@
+/*
+ * Carl Miller
+ * This class handles data from the tutor table.
+ * It allows for load and insert
+ */
 package models;
 
 import java.sql.Connection;

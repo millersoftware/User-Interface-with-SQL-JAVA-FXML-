@@ -26,15 +26,15 @@
                   <MenuItem mnemonicParsing="false" onAction="#addSubject" text="Subject" />
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="Edit">
+            <Menu mnemonicParsing="false" onShowing="#activateModifyItem" text="Edit">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#modifyReport" text="Report" />
+                  <MenuItem fx:id="modifyItem" mnemonicParsing="false" onAction="#modifyReport" text="Report" />
                </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="Order">
+            <Menu mnemonicParsing="false" onShowing="#activateOrderItem" text="Order">
                <items>
-                  <MenuItem mnemonicParsing="false" text="Order by Name" />
-                  <MenuItem mnemonicParsing="false" text="Order by Enroll Date" />
+                  <MenuItem fx:id="nameItem" mnemonicParsing="false" onAction="#orderName" text="Order by Name" />
+                  <MenuItem fx:id="enrolledItem" mnemonicParsing="false" onAction="#orderEnroll" text="Order by Enroll Date" />
                </items>
             </Menu>
         </menus>
